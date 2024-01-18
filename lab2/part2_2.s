@@ -35,8 +35,8 @@ iloop:
 -1 if the student number isn't found */ 
 
 result: .byte 0
-        .byte 0,0,0 # WARNING: i have these here for alignment of Snumbers, but idk if this is the way to deal with it
-		
+        .align 2
+
 /* Snumbers is the "array," terminated by a zero of the student numbers  */
 Snumbers: .word 10392584, 423195, 644370, 496059, 296800
         .word 265133, 68943, 718293, 315950, 785519
