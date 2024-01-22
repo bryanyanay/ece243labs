@@ -26,6 +26,10 @@ done:
   movia r9, result
   stw r13, (r9)
 
+.equ LEDs, 0xFF200000
+movia r25, LEDs
+stwio r13, (r25)
+
 iloop: 
   br iloop
 

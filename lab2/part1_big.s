@@ -19,6 +19,11 @@ loop:
   br loop
 
 finished: stw r11,(r8)    # store the answer into result
+
+.equ LEDs, 0xFF200000
+movia r25, LEDs
+stwio r11, (r25)
+
 iloop: br iloop
 
 result: 
@@ -27,5 +32,4 @@ n:
   .word 15
 numbers: 
   .word 1, 3, 2, 4, 8, 9, 7, 6, 5, 10, 15, 14, 12, 13, 11
-	
 	
