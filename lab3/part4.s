@@ -59,6 +59,8 @@ done:
 
 # 0x00800000 iterations works well on cpulator
 # QUESTION: what works well on the board?
+# 0x01000000 works alright on the board, things go much faster on the board though
+# things go faster on the board since the instructions are executing directly in the hardware, so things happen at the speed of the circuit, instead of being simulated by a general purpose processor, which adds a lot of overhead.
 DELAY: # using r12
   movia r12, 0x00800000
 delayloop:
