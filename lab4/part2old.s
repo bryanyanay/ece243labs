@@ -3,25 +3,11 @@
 _start:
   .equ KEY_BASE, 0xff200050
   .equ LEDS, 0xff200000
-  .equ COUNTER_INIT, 25000000
-  .equ TIMER_BASE, 0xff202000
+  .equ COUNTER_DELAY, 500000 # use 10000000 when on actual board
 
   movia r16, LEDS
   movia r17, KEY_BASE
-  movia r20, TIMER_BASE
   movi r7, 0          # flag register for when counter is started/stopped; 0 = stopped, 1 = started
-
-  # start the timer
-  stwio r0, (r20)
-  movi r21, 0b1000          # STOP timer in case it was running
-  stwio r21, 0x4(r20)
-  movia r21, COUNTER_INIT
-  srli r22, r21, 16         # r22 now has upper 16 bits of COUNTER_INIT
-  andi r21, r21, 0xffff     # r21 has lower 16 bits
-  stwio r21, 0x8(r20)
-  stwio r22, 0xC(r20)
-  movi r21, 0b0110          # START and CONT
-  stwio r21, 0x4(r20)
 
 polling:
   ldwio r4, 0xC(r17)   # store the current edge capture bits in r4
@@ -46,13 +32,11 @@ polling:
 counting:
   beq r7, r0, polling     # if counter is stopped, just go back to polling
 
-  # otherwise, wait until next timeout
+  # otherwise, wait approx 0.25 seconds
+  movia r18, COUNTER_DELAY
 delay:
-  ldwio r21, (r20)
-  andi r21, r21, 1
-  beq r21, r0, delay    # if TO not happened yet, keep waiting
-
-  stwio r0, (r20)       # reset TO
+  subi r18, r18, 1
+  bne r18, r0, delay
 
   # then update the counter
   ldwio r18, (r16)

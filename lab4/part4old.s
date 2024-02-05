@@ -12,8 +12,8 @@ _start:
   movi r7, 0          # flag register for when counter is started/stopped; 0 = stopped, 1 = started
 
   # start the timer
-  stwio r0, (r20)
-  movi r21, 0b1000
+  stwio r0, (r20)           # clear data
+  movi r21, 0b1000          # STOP timer in case it was running
   stwio r21, 0x4(r20)
   movia r21, COUNTER_INIT
   srli r22, r21, 16         # r22 now has upper 16 bits of COUNTER_INIT
@@ -53,26 +53,6 @@ delay:
   beq r21, r0, delay    # if TO not happened yet, keep waiting
 
   stwio r0, (r20)       # reset TO
-  
-  # CHECK KEYS AGAIN
-  ldwio r4, 0xC(r17)   # store the current edge capture bits in r4
-
-  # check KEY0
-  movi r5, 0b1                    
-  call check_and_handle_keypress
-  bne r2, r0, counting      # if the key was pressed, skip checking the other keys
-
-  movi r5, 0b10
-  call check_and_handle_keypress
-  bne r2, r0, counting
-
-  movi r5, 0b100
-  call check_and_handle_keypress
-  bne r2, r0, counting
-
-  movi r5, 0b1000
-  call check_and_handle_keypress
-  bne r2, r0, counting
 
   # then update the counter
   ldwio r9, (r16)

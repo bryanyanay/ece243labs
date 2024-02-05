@@ -3,7 +3,7 @@
 _start:
   .equ KEY_BASE, 0xff200050
   .equ LEDS, 0xff200000
-  .equ COUNTER_DELAY, 500000 # use 10000000 when on actual board
+  .equ COUNTER_DELAY, 10000000 # use 10000000 when on actual board; use 500000 on cpulator
 
   movia r16, LEDS
   movia r17, KEY_BASE
@@ -38,6 +38,26 @@ delay:
   subi r18, r18, 1
   bne r18, r0, delay
 
+  # CHECK KEYS AGAIN
+  ldwio r4, 0xC(r17)   # store the current edge capture bits in r4
+
+  # check KEY0
+  movi r5, 0b1                    
+  call check_and_handle_keypress
+  bne r2, r0, counting      # if the key was pressed, skip checking the other keys
+
+  movi r5, 0b10
+  call check_and_handle_keypress
+  bne r2, r0, counting
+
+  movi r5, 0b100
+  call check_and_handle_keypress
+  bne r2, r0, counting
+
+  movi r5, 0b1000
+  call check_and_handle_keypress
+  bne r2, r0, counting
+
   # then update the counter
   ldwio r18, (r16)
   movi r19, 255
@@ -60,6 +80,7 @@ check_and_handle_keypress:
   and r8, r4, r5              
   beq r8, r0, not_pressed  # if KEY0 is not pressed, skip the actions
   xori r7, r7, 1           # otherwise toggle our flag
+  movi r5, 0b1111
   stwio r5, 0xC(r17)        # reset edge capture bit
   movi r2, 1
   ret
