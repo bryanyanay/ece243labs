@@ -169,6 +169,7 @@ CONFIG_KEYS:
     movia r8, KEY_BASE
     movi r9, 0b1111
     stwio r9, 0xC(r8)   # clear edge capture
+    movi r9, 0b0111
     stwio r9, 0x8(r8)   # enable interrupts for every key
     ret
 
