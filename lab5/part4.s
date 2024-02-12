@@ -86,6 +86,10 @@ NO_KEY0:
     movia r18, COUNT_INIT   # double COUNT_INIT, updating it value in memory
     ldw r19, (r18)
     slli r19, r19, 1
+    bne r19, r0, NO_RESET_HIGH
+    movi r19, 0xffffffff
+NO_RESET_HIGH:
+
     stw r19, (r18)
 
     movia r18, TIMER_BASE
@@ -105,6 +109,10 @@ NO_KEY1:
     movia r18, COUNT_INIT   # halve COUNT_INIT, updating it value in memory
     ldw r19, (r18)
     srli r19, r19, 1
+    bne r19, r0, NO_RESET_LOW
+    movi r19, 1
+NO_RESET_LOW:
+
     stw r19, (r18)
 
     movia r18, TIMER_BASE
