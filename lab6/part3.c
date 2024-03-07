@@ -50,9 +50,9 @@ int main() {
 
         if (audioPtr->wsrc > 0 && audioPtr->wslc > 0) {
             audioPtr->left = audioVal;
-            audioPtr->right = audioVal; 
+            audioPtr->right = audioVal;
+            currSampleCount++;
         }
 
-        currSampleCount++;
     }
 }
